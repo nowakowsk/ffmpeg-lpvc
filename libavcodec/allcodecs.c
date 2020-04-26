@@ -175,6 +175,8 @@ extern AVCodec ff_kmvc_decoder;
 extern AVCodec ff_lagarith_decoder;
 extern AVCodec ff_ljpeg_encoder;
 extern AVCodec ff_loco_decoder;
+extern AVCodec ff_lpvc_encoder;
+extern AVCodec ff_lpvc_decoder;
 extern AVCodec ff_lscr_decoder;
 extern AVCodec ff_m101_decoder;
 extern AVCodec ff_magicyuv_encoder;

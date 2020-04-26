@@ -245,6 +245,7 @@ External library support:
   --enable-libklvanc       enable Kernel Labs VANC processing [no]
   --enable-libkvazaar      enable HEVC encoding via libkvazaar [no]
   --enable-liblensfun      enable lensfun lens correction [no]
+  --enable-liblpvc         enable Longplay Video Codec [no]
   --enable-libmodplug      enable ModPlug via libmodplug [no]
   --enable-libmp3lame      enable MP3 encoding via libmp3lame [no]
   --enable-libopencore-amrnb enable AMR-NB de/encoding via libopencore-amrnb [no]
@@ -321,6 +322,7 @@ External library support:
   --enable-vulkan          enable Vulkan code [no]
   --disable-xlib           disable xlib [autodetect]
   --disable-zlib           disable zlib [autodetect]
+  --enable-zstd            enable Zstandard [no]
 
   The following libraries provide various hardware acceleration features:
   --disable-amf            disable AMF video encoding code [autodetect]
@@ -1710,6 +1712,7 @@ EXTERNAL_AUTODETECT_LIBRARY_LIST="
     sndio
     xlib
     zlib
+    zstd
 "
 
 EXTERNAL_LIBRARY_GPL_LIST="
@@ -1781,6 +1784,7 @@ EXTERNAL_LIBRARY_LIST="
     libjack
     libklvanc
     libkvazaar
+    liblpvc
     libmodplug
     libmp3lame
     libmysofa
@@ -2750,6 +2754,8 @@ jpegls_decoder_select="mjpeg_decoder"
 jv_decoder_select="blockdsp"
 lagarith_decoder_select="llviddsp"
 ljpeg_encoder_select="idctdsp jpegtables mpegvideoenc"
+lpvc_decoder_deps="liblpvc zstd"
+lpvc_encoder_deps="liblpvc zstd"
 lscr_decoder_deps="zlib"
 magicyuv_decoder_select="llviddsp"
 magicyuv_encoder_select="llvidencdsp"
@@ -5212,7 +5218,7 @@ fi
 
 add_cppflags -D_ISOC99_SOURCE
 add_cxxflags -D__STDC_CONSTANT_MACROS
-check_cxxflags -std=c++11 || check_cxxflags -std=c++0x
+check_cxxflags -std=c++17
 
 # some compilers silently accept -std=c11, so we also need to check that the
 # version macro is defined properly
@@ -6232,6 +6238,8 @@ fi
 
 enabled  zlib && { check_pkg_config zlib zlib "zlib.h" zlibVersion ||
                    check_lib zlib   zlib.h      zlibVersion    -lz; }
+enabled  zstd && { check_pkg_config zstd zstd "zstd.h" ZSTD_versionString ||
+                   check_lib zstd   zstd.h      ZSTD_versionString    -lzstd; }
 enabled bzlib && check_lib bzlib bzlib.h BZ2_bzlibVersion    -lbz2
 enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzma
 
@@ -6403,6 +6411,7 @@ enabled libx265           && require_pkg_config libx265 x265 x265.h x265_api_get
 enabled libxavs           && require libxavs "stdint.h xavs.h" xavs_encoder_encode "-lxavs $pthreads_extralibs $libm_extralibs"
 enabled libxavs2          && require_pkg_config libxavs2 "xavs2 >= 1.3.0" "stdint.h xavs2.h" xavs2_api_get
 enabled libxvid           && require libxvid xvid.h xvid_global -lxvidcore
+enabled liblpvc           && require_cpp liblpvc lpvc/lpvc.h "lpvc::Color" -lliblpvc -lstdc++
 enabled libzimg           && require_pkg_config libzimg "zimg >= 2.7.0" zimg.h zimg_get_api_version
 enabled libzmq            && require_pkg_config libzmq "libzmq >= 4.2.1" zmq.h zmq_ctx_new
 enabled libzvbi           && require_pkg_config libzvbi zvbi-0.2 libzvbi.h vbi_decoder_new &&

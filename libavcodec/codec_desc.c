@@ -1406,6 +1406,13 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .props     = AV_CODEC_PROP_LOSSY,
     },
     {
+        .id        = AV_CODEC_ID_LPVC,
+        .type      = AVMEDIA_TYPE_VIDEO,
+        .name      = "lpvc",
+        .long_name = NULL_IF_CONFIG_SMALL("Longplay Video Codec"),
+        .props     = AV_CODEC_PROP_LOSSLESS,
+    },
+    {
         .id        = AV_CODEC_ID_Y41P,
         .type      = AVMEDIA_TYPE_VIDEO,
         .name      = "y41p",
