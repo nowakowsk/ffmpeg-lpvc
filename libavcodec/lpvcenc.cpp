@@ -8,7 +8,9 @@ extern "C"
 
 } // extern "C"
 
+#include "lpvciter.h"
 #include <lpvc/lpvc.h>
+#include <cstddef>
 #include <stdexcept>
 
 
@@ -65,6 +67,7 @@ static int encodeInit(AVCodecContext* avctx)
     }
     catch(...)
     {
+        av_log(avctx, AV_LOG_ERROR, "Unknown error\n");
     }
 
     return AVERROR_UNKNOWN;
@@ -81,7 +84,7 @@ static int encodeEnd(AVCodecContext* avctx)
 }
 
 
-static int encodeFrame(AVCodecContext* avctx, AVPacket* pkt, const AVFrame* pict, int* got_packet)
+static int encodeFrame(AVCodecContext* avctx, AVPacket* pkt, const AVFrame* frame, int* got_packet)
 {
     try
     {
@@ -99,7 +102,7 @@ static int encodeFrame(AVCodecContext* avctx, AVPacket* pkt, const AVFrame* pict
             return ret;
 
         auto result = ctx->encoder->encode(
-            reinterpret_cast<const lpvc::Color*>(pict->data[0]),
+            LpvcIterator(avctx->width, frame->linesize[0], reinterpret_cast<std::byte*>(frame->data[0])),
             reinterpret_cast<std::byte*>(pkt->data),
             keyFrame
         );
@@ -123,6 +126,7 @@ static int encodeFrame(AVCodecContext* avctx, AVPacket* pkt, const AVFrame* pict
     }
     catch(...)
     {
+        av_log(avctx, AV_LOG_ERROR, "Unknown error\n");
     }
 
     return AVERROR_UNKNOWN;
