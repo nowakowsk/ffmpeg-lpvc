@@ -17,7 +17,7 @@ struct LpvcDecoderContext
 };
 
 
-static int decodeInit(AVCodecContext* avctx)
+static av_cold int decodeInit(AVCodecContext* avctx)
 {
     try
     {
@@ -45,7 +45,7 @@ static int decodeInit(AVCodecContext* avctx)
 }
 
 
-static int decodeEnd(AVCodecContext* avctx)
+static av_cold int decodeEnd(AVCodecContext* avctx)
 {
     auto ctx = static_cast<LpvcDecoderContext*>(avctx->priv_data);
 

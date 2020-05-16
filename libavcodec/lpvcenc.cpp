@@ -45,7 +45,7 @@ static lpvc::EncoderSettings makeEncoderSettings(AVCodecContext* avctx)
 }
 
 
-static int encodeInit(AVCodecContext* avctx)
+static av_cold int encodeInit(AVCodecContext* avctx)
 {
     auto ctx = static_cast<LpvcEncoderContext*>(avctx->priv_data);
 
@@ -74,7 +74,7 @@ static int encodeInit(AVCodecContext* avctx)
 }
 
 
-static int encodeEnd(AVCodecContext* avctx)
+static av_cold int encodeEnd(AVCodecContext* avctx)
 {
     auto ctx = static_cast<LpvcEncoderContext*>(avctx->priv_data);
 
